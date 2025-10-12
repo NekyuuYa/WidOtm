@@ -1,13 +1,12 @@
 #include <iostream>
-#include "fpsSchedule.hpp"
-
-const unsigned fps = 60;
+#include "WidOtm_compPack.hpp"
 
 void render(int frame) {
-
+    
 }
 int main() {
-    FpsScheduler sched(fps);
+    auto WD1 = WO_tmWindow(NO_TITLE);
+    WO_FpsSch sched(60);
     int frame = 0;
     while (true) {
         frame++;
