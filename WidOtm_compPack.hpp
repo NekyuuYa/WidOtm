@@ -3,16 +3,10 @@
 #include <chrono>
 #include <ctime>
 #include <thread>
+#include <string>
 
 extern unsigned int fps;
 
-// 窗口类型
-
-// 无标题栏窗口
-#define NO_TITLE 0
-// 标准带标题窗口，含基本操作控件
-#define STD_WITH_TITLE 1
-typedef int WO_TYPE;
 
 class WO_FpsSch {
 public:
@@ -60,41 +54,51 @@ struct tm_frame{
     }
 };
 
-class WO_tmWindow {
-    private:
-        WO_SIZE size;
-        WO_TYPE type;
-        WO_PST pos;
-        HWND hWnd;
-        
-    public:
-        /**
-         * @brief 声明一个新的窗口
-         * @param type 窗口类型
-         */
-        WO_tmWindow (WO_TYPE type = NO_TITLE) {
-            this->type = type;
+namespace WO_OBJ {
+    int CLASSES_ID = 0;
+    struct PrtClass {
+        WNDCLASSEX wc;
+        int id;
+        LPCWSTR className;
+        PrtClass(HBRUSH brush = NULL,
+                HICON icon = LoadIcon(NULL, IDI_APPLICATION),
+                HCURSOR cursor = LoadCursor(NULL, IDC_ARROW)) {
+            id = ++CLASSES_ID;
+            className = (L"PrtClass" + std::to_wstring(id)).c_str();
+            wc.cbSize = sizeof(WNDCLASSEX);
+            wc.style = CS_HREDRAW | CS_VREDRAW;
+            wc.lpfnWndProc = DefWindowProc;
+            wc.cbClsExtra = 0;
+            wc.cbWndExtra = 0;
+            wc.hInstance = GetModuleHandle(NULL);
+            wc.hIcon = icon;
+            wc.hCursor = cursor;
+            wc.hbrBackground = brush;
+            wc.lpszMenuName = NULL;
+            wc.lpszClassName = className;
+            wc.hIconSm = NULL;
+            RegisterClassEx(&wc);
         }
-
-        bool modifiySize(WO_SIZE size) {
-            if (this->size.width != size.width || this->size.height != size.height) {
+    };
+    class paint {
+        private:
+            WO_SIZE size;
+            WO_PST pos;
+            LPCWSTR PrtClassName;
+            HWND hWnd;
+        public:
+            paint() {};
+            paint(PrtClass PrtCls): PrtClassName(PrtCls.className) {};
+            bool INIT(WO_SIZE size, WO_PST pos) {
                 this->size = size;
-                return true;
+                this->pos = pos;
+                hWnd = CreateWindowEx(
+                    0, PrtClassName, L"",
+                    WS_POPUP | WS_VISIBLE,
+                    pos.x, pos.y, size.width, size.height,
+                    NULL, NULL, NULL, NULL
+                );
             }
-            return false;
-        }
+    };
+}
 
-        bool initWindow(WO_SIZE size, WO_PST pos) {
-            this->size = size;
-            this->pos = pos;
-            WNDCLASSEX wc = {0};
-            switch (type) {
-            case NO_TITLE:
-                break;
-            case STD_WITH_TITLE:
-                break;
-            default:
-                break;
-            }
-        }
-};

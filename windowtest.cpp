@@ -40,12 +40,12 @@ public:
 
         // 创建窗口
         hWnd = CreateWindowEx(
-            WS_EX_STATICEDGE,        // 扩展风格
+            0,        // 扩展风格
             "MyWindowClass",         // 窗口类名
             title,                   // 窗口标题
-            WS_CAPTION | WS_SYSMENU,     // 窗口风格
-            CW_USEDEFAULT,           // X坐标
-            CW_USEDEFAULT,           // Y坐标
+            WS_CHILD,     // 窗口风格
+            300,           // X坐标
+            300,           // Y坐标
             width,                   // 宽度
             height,                  // 高度
             NULL,                    // 父窗口

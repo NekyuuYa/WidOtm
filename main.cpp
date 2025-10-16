@@ -1,11 +1,16 @@
 #include <iostream>
+#include <algorithm>
 #include "WidOtm_compPack.hpp"
 
 void render(int frame) {
     
 }
 int main() {
-    auto WD1 = WO_tmWindow(NO_TITLE);
+    auto TPCls1 = WO_OBJ::PrtClass();
+    WO_OBJ::paint WordList[6];
+    std::fill_n(WordList, 6, WO_OBJ::paint(TPCls1));
+
+    
     WO_FpsSch sched(60);
     int frame = 0;
     while (true) {
@@ -15,4 +20,3 @@ int main() {
     }
     return 0;
 }
-
